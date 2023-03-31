@@ -21,6 +21,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -89,10 +91,20 @@ fun MainScreen() {
     Graphic()
 }
 
+fun fillPoints(): MutableList<Offset> {
+    var points = mutableListOf<Offset>()
+    for (x in 0..SCREEN_WIDTH.toInt()) {
+        val y = (sin(x * (2f * PI /   SCREEN_WIDTH))
+                * (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT / 2)).toFloat()
+        points.add(Offset(x.toFloat(), y))
+    }
+    return points
+}
+
+
 
 @Composable
 fun Graphic() {
-    var points = mutableListOf<Offset>()
     Canvas(
         modifier = Modifier
             .padding(top = Dp(166))
@@ -100,6 +112,15 @@ fun Graphic() {
             .background(color = DarkGreen)
             .clip(RectangleShape)
     ) {
+
+        drawPoints(
+            points = fillPoints(),
+            strokeWidth = 3f,
+            pointMode = PointMode.Lines,
+            color = Color.White
+        )
+
+
         drawLine(
             start = Offset(x = SCREEN_WIDTH.toFloat() / 2, y = SCREEN_HEIGHT.toFloat()),
             end = Offset(x = SCREEN_WIDTH.toFloat() / 2, y = 0f),
