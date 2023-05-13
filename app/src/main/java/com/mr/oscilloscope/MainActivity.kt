@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
@@ -91,17 +90,24 @@ fun MainScreen() {
     Graphic()
 }
 
-fun fillPoints(): MutableList<Offset> {
-    var points = mutableListOf<Offset>()
-    for (x in 0..SCREEN_WIDTH.toInt()) {
-        val y = (sin(x * (2f * PI /   SCREEN_WIDTH))
-                * (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT / 2)).toFloat()
-        points.add(Offset(x.toFloat(), y))
+
+fun fillPoints(amp:Float,phas:Float): MutableList<Offset> {
+
+    val offsetchanel = (SCREEN_WIDTH  / 2).toFloat()
+    val points = mutableListOf<Offset>()
+
+    for (y in 0 until   SCREEN_HEIGHT) {
+        // x in 0 until size.width.toInt()
+        var base = 0.0f
+        for(i in 21 downTo 1 step 2 ){
+            base+=sin((i*phas*y).toFloat())/i
+        }
+        val x = (amp*base + offsetchanel)
+
+        points.add(Offset(x, y.toFloat()))
     }
     return points
 }
-
-
 
 @Composable
 fun Graphic() {
@@ -114,10 +120,18 @@ fun Graphic() {
     ) {
 
         drawPoints(
-            points = fillPoints(),
-            strokeWidth = 3f,
-            pointMode = PointMode.Lines,
-            color = Color.White
+            points = fillPoints((SCREEN_WIDTH / 3).toFloat(),(3*2f * PI /SCREEN_HEIGHT).toFloat()),
+            strokeWidth = 4f,
+            pointMode = PointMode.Polygon,
+            color = Color.Red
+
+        )
+        drawPoints(
+            points =  fillPoints((SCREEN_WIDTH / 3).toFloat(),(7*2f * PI /SCREEN_HEIGHT).toFloat()),
+            strokeWidth = 4f,
+            pointMode = PointMode.Polygon,
+            color = Color.Yellow
+
         )
 
 
